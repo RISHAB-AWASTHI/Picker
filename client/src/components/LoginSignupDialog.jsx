@@ -14,32 +14,37 @@ const LoginSignupDialog = () => {
   const { loading, error, dispatch } = useContext(AuthContext);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false); // Local loading state
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setIsLoading(true); // Set loading state to true
     dispatch({ type: 'LOGIN_START' });
     try{
-      const res = await axios.post(`${apiUri}/auth/login`, loginData, {withCredentials: true})
-      dispatch({type:"LOGIN_SUCCESS", payload: res.data})
-      setLoginData({ email: "", password: "" })
-    }catch(err){
-      dispatch({type: "LOGIN_FAILED", payload: err.response.data})
+      const res = await axios.post(`${apiUri}/auth/login`, loginData, { withCredentials: true });
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+      setLoginData({ email: "", password: "" });
+    } catch (err) {
+      dispatch({ type: "LOGIN_FAILED", payload: err.response.data });
+    } finally {
+      setIsLoading(false); // Reset loading state after success or failure
     }
   };
-
 
   const handleSignup = async (event) => {
     event.preventDefault();
+    setIsLoading(true); // Set loading state to true
     dispatch({ type: 'LOGIN_START' });
     try{
-      const res = await axios.post(`${apiUri}/auth/register`, signupData, {withCredentials: true})
-      dispatch({type:"LOGIN_SUCCESS", payload: res.data})
-      setSignupData({ name: "", email: "", password: "" })
-    }catch(err){
-      dispatch({type: "LOGIN_FAILED", payload: err.response.data})
+      const res = await axios.post(`${apiUri}/auth/register`, signupData, { withCredentials: true });
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+      setSignupData({ name: "", email: "", password: "" });
+    } catch (err) {
+      dispatch({ type: "LOGIN_FAILED", payload: err.response.data });
+    } finally {
+      setIsLoading(false); // Reset loading state after success or failure
     }
   };
-
 
   return (
     <Dialog>
@@ -71,7 +76,9 @@ const LoginSignupDialog = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button disabled={loading} type="submit">Log in</Button>
+                    <Button disabled={isLoading || loading} type="submit">
+                      {isLoading ? "Loading..." : "Log in"}
+                    </Button>
                   </CardFooter>
                 </Card>
               </form>
@@ -82,6 +89,7 @@ const LoginSignupDialog = () => {
                 <CardHeader>
                   <CardTitle>Signup</CardTitle>
                   <CardDescription>Create a new account.</CardDescription>
+
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="space-y-1">

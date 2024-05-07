@@ -17,7 +17,7 @@ export const register = async (req, res, next) => {
     })
     await newUser.save();
     
-    const accessToken = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+    const accessToken = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     const options = {
       httpOnly: true,
@@ -43,7 +43,7 @@ export const login = async(req, res, next)=>{
     if (!user || !await bcrypt.compare(req.body.password, user.password)) {
       return res.status(400).json({message:"Wrong email or password"});
     }
-    const accessToken = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+    const accessToken = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     const options = {
       httpOnly: true,

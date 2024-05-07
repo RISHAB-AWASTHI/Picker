@@ -40,12 +40,12 @@ const SearchPage = () => {
                 <Skeleton className="h-[200px] w-full my-3 p-4 rounded-xl" />
               </>
             )}
-            {data && (
+            {data && data.rides ? (
               <>
                 <h3>
                   {from} <MoveRight className="inline-block" /> {to}
                 </h3>
-                <h3>{data?.rides.length} rides available</h3>
+                <h3>{data.rides.length} rides available</h3>
                 {data.rides.length === 0 ? (
                   <h3 className='text-xl font-semibold'>No rides available based on your search criteria.</h3>
                 ) : (
@@ -56,6 +56,8 @@ const SearchPage = () => {
                   ))
                 )}
               </>
+            ) : (
+              <h3 className="text-xl font-semibold">Loading...</h3>
             )}
           </div>
         </div>
